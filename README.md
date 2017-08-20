@@ -93,3 +93,10 @@ $ python flask_structrue.py
 ```shell
 $ python flask_structrue.py runserver --host 0.0.0.0
 ```
+
+## 模板
+---
+### 渲染模板
+---
+Flask提供的`render_template`函数把Jinja2模板引擎集成到程序中。
+`render_template`函数的第一个参数是模板的文件名，随后的参数都是键值对，表示模板变量中对应的真实值。
