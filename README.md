@@ -100,3 +100,31 @@ $ python flask_structrue.py runserver --host 0.0.0.0
 ---
 Flask提供的`render_template`函数把Jinja2模板引擎集成到程序中。
 `render_template`函数的第一个参数是模板的文件名，随后的参数都是键值对，表示模板变量中对应的真实值。
+
+**注:模板中的语法应使用Jinja的语法格式而不是html的语法格式,例如注释应使用{# ... #}语法。**
+```Jinja2
+{# note: disabled template because we no longer use this
+    {% for user in users %}
+        ...
+    {% endfor %}
+#}
+```
+
+### 变量
+---
+Jinja2中可以使用 **过滤器** 修改变量。过滤名添加在变量名之后，中间用竖线分隔。
+
+|过滤器名|说明|
+|---|---|
+|safe|渲染时值不转义|
+|capitalize|首字母大写，其他小写|
+|lower|转换成小写|
+|upper|转换成大写|
+|title|每个单词首字母大写|
+|trim|把首位空格去掉|
+|striptags|渲染之前把值中所有HTML标签去掉|
+
+**注：千万不要在不可信的值上使用safe过滤器，例如用户在表单中输入的文本。**
+
+### 控制结构
+---
