@@ -1,0 +1,29 @@
+<h1>Hello, {{ name|capitalize }}!</h1>
+<p>{{ mylist[0] }}</p>
+<p>{{mydict['key']|upper}}</p>
+
+{# 条件控制 #}
+<h1>
+    {% if name %}
+        Hello, {{ name }}!
+    {% else %}
+        Hello, Stranger!
+    {% endif %}
+</h1>
+
+{# 循环控制 #}
+<ul>
+    {% for item in mylist %}
+        <li>{{ item }}</li>
+    {% endfor %}
+</ul>
+
+{# 宏 #}
+{% macro render_item(item) %}
+    <li>{{ item }}</li>
+{% endmacro %}
+<ul>
+    {% for item in mylist %}
+        {{ render_item(item) }}
+    {% endfor %}
+</ul>
