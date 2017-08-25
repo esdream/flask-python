@@ -1,0 +1,8 @@
+{# 模版继承bootstrap/base.html路径并不在文件目录中，这是怎么做到的？ #}
+{%extends "base.html"%}
+{%block title%}Flasky{%endblock%}
+{%block page_content%}
+<div class="page-header">
+    <h1>Hello, {{name}}!</h1>
+</div>
+{%endblock%}

@@ -128,3 +128,45 @@ Jinja2中可以使用 **过滤器** 修改变量。过滤名添加在变量名�
 
 ### 控制结构
 ---
+Jinja2中支持条件控制、循环、宏等控制语句。
+
+另一种重复使用代码的方式是模版继承。例如下方代码中`block`标签定义的元素可以在衍生模版中修改。
+```jinja2
+<html>
+<head>
+    {%block head%}
+    <title>{%block title%}{%endblock%} - My Application</title>
+    {%endblock%}
+</head>
+<body>
+    {%block body%}
+    {%endblock%}
+</body>
+</html>
+```
+在衍生模版中，修改`block`标签内定义的内容。`extends`指令声明模版继承自`base.html`。在`block head`模块中，由于模版中内容不是空的，所以用`super()`获得模版中的内容。如果不对模板中的某一`block`的内容进行修改，则不需要在子文件中写出。
+```Jinja2
+{%extends "base.html"%}
+{%block title%}Index{%endblock%}
+{%block head%}
+    {{super()}}
+    <style></style>
+{%endblock%}
+{%block body%}
+<h1>Hello Dva</h1>
+{%endblock%}
+```
+
+### 自定义错误页面
+---
+Flask允许程序使用基于模板的自定义错误页面，通过装饰器修饰。
+```python
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html')
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html')
+```
+其中`404.html`和`500.html`可以自己定义。
