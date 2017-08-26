@@ -170,3 +170,12 @@ def internal_server_error(e):
     return render_template('500.html')
 ```
 其中`404.html`和`500.html`可以自己定义。
+
+### 链接
+---
+在编写多个路由的程序时，经常需要编写包含可变部分的动态路由。Flask提供了`url_for()`函数。可以使用程序URL中映射保存的信息生成URL。
+```python
+from flask import url_for
+```
+视图函数最简单的用法是以视图函数名作为参数，返回对应的URL。例如在`view.py`中有一个视图函数名称为`index`。则`url_for('index')`返回的结果是`/`。调用`url_for('index', _external=True)`将会返回绝对地址，例如在本地运行视图函数，则返回'http://localhost:5000'。
+生成动态地址时，将动态部分作为关键字参数传入`url_for`即可；同时`url_for`的关键字参数不限于动态路由，函数能将任何额外参数传入查询字符串中，例如`url_for('index', page=2)`返回结果是`/?page=2`。

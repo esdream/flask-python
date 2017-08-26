@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
@@ -21,6 +21,15 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.thml'), 500
+
+@app.route('/test')
+def test_url_for():
+    print(url_for('user', name='letian'))
+    print(url_for('index'))
+    print(url_for('user', name='join', _external=True))
+    print(url_for('index', raper=3))
+    # 视图函数必须要有返回值
+    return ''
 
 if(__name__ == '__main__'):
     app.run(debug=True)
