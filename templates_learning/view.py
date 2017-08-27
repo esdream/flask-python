@@ -28,6 +28,7 @@ def test_url_for():
     print(url_for('index'))
     print(url_for('user', name='join', _external=True))
     print(url_for('index', raper=3))
+    print(url_for('static', filename='css/style.css', _external=True))
     # 视图函数必须要有返回值
     return ''
 
