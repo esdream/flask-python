@@ -179,3 +179,11 @@ from flask import url_for
 ```
 视图函数最简单的用法是以视图函数名作为参数，返回对应的URL。例如在`view.py`中有一个视图函数名称为`index`。则`url_for('index')`返回的结果是`/`。调用`url_for('index', _external=True)`将会返回绝对地址，例如在本地运行视图函数，则返回'http://localhost:5000'。
 生成动态地址时，将动态部分作为关键字参数传入`url_for`即可；同时`url_for`的关键字参数不限于动态路由，函数能将任何额外参数传入查询字符串中，例如`url_for('index', page=2)`返回结果是`/?page=2`。
+
+### 静态文件
+---
+Flask对静态文件的引用被当成一个特殊的路由，即`static/<filename>`。静态文件包括HTML代码中引用的图片、JavaScript源码和CSS。默认情况下，Flask会在程序根目录中名为`static`的子目录中寻找静态文件。
+
+### 本地化日期和时间
+---
+服务器需要同一时间单位，通常使用UTC。而要在服务器使用UTC，在用户浏览器上使用当地时间，一种优雅的解决方案是 **把时间单位发送至浏览器转换成当地时间，然后渲染** 。`Flask-Moment`可以将实现这一功能的`moment.js`集成至Jinja2模版中。
