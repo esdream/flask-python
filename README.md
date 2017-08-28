@@ -183,3 +183,7 @@ from flask import url_for
 ### 静态文件
 ---
 Flask对静态文件的引用被当成一个特殊的路由，即`static/<filename>`。静态文件包括HTML代码中引用的图片、JavaScript源码和CSS。默认情况下，Flask会在程序根目录中名为`static`的子目录中寻找静态文件。
+
+### 本地化日期和时间
+---
+服务器需要同一时间单位，通常使用UTC。而要在服务器使用UTC，在用户浏览器上使用当地时间，一种优雅的解决方案是 **把时间单位发送至浏览器转换成当地时间，然后渲染** 。`Flask-Moment`可以将实现这一功能的`moment.js`集成至Jinja2模版中。
