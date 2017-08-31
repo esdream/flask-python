@@ -35,6 +35,11 @@ $ pip install flask
 Flask为了避免大量参数把视图函数弄得一团糟，使用 **上下文** 临时把某些对象变为全局访问。
 Flask中有两种上下文：**程序上下文** 和 **请求上下文**。Flask在分发请求之前激活/推送程序和请求上下文，请求处理完成后再将其删除，原理与Python中`with`引导的上下文作用类似（临时打开文件，处理完成后关闭）。
 
+`app.route`修饰器中添加methods参数告诉Flask在映射中将这个视图函数注册为GET和POST请求的处理程序。默认只注册为GET请求。
+```python
+app.route('/', methods=['GET', 'POST'])
+```
+
 ### 请求调度
 ---
 程序收到客户端发来的请求时，要找到处理该请求的视图函数，Flask会在程序的 **URL映射** 中查找请求的URL。Flask使用 **app.route修饰器** 或 **非修饰器形式的app.add_url_rule()** 生成映射。
@@ -197,3 +202,43 @@ Flask对静态文件的引用被当成一个特殊的路由，即`static/<filena
 
 ### 表单类
 ---
+使用`Flask-WTF`时，每个Web表单都由一个继承自Form的类表示，这个类定义表单中的一组字段，每个字段用对象表示。字段对象可以添加一个或者多个验证函数，用来验证用户的输入值是否符合要求。
+```python
+from flask_wtf import Form
+from wtforms import StringField, SubmitField
+from wtforms.validators import Required
+
+class NameForm(Form):
+    name = StringField('What is your name?', validators=[Required()])
+    submit = SubmitField('Submit')
+```
+其中`StringField`和`SubmitField`就是要定义的字段的类，使用时传入参数初始化成对象。`StringField`对应前端表单的属性为`type="text"`的`<input>`元素，`SubmitField`对应前端表单属性为`type="submit"`的`<input>`元素。
+`Required`是验证函数的一种，使用时传入字段对象的`validators`参数中。
+这时候后端对象创建好了，要在模版中将表单渲染成HTML。在`template/index.html`中使用`Flask-Bootstrap`渲染表单。
+```Jinja2
+{%extends "base.html"%}
+{%import "bootstrap/wtf.html" as wtf%}
+
+{%block title%}Flasky{%endblock%}
+
+{%block page_content%}
+<div class="page-header">
+    <h1>Hello, {%if name%}{{name}}{%else%}Stranger{%endif%}</h1>
+</div>
+{{wtf.quick_form(form)}}
+{%endblock%}
+```
+
+最后在视图函数中，还要定义处理表单的路由方法。
+```python
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    name = None
+    form = NameForm()
+    if(form.validate_on_submit):
+        name = form.name.data
+        form.name.data = ''
+        print(name)
+    return render_template('index.html', form=form, name=name)
+```
+视图函数中创建一个`NameForm`类的实例表示表单。如果验证函数通过，`validate_on_submit()`方法返回True。
