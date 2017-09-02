@@ -242,3 +242,8 @@ def index():
     return render_template('index.html', form=form, name=name)
 ```
 视图函数中创建一个`NameForm`类的实例表示表单。如果验证函数通过，`validate_on_submit()`方法返回True。
+
+### 重定向和用户会话
+---
+在表单中，最好不要让Web程序把POST请求作为浏览器发送的最后一个请求。最好的方法是，使用 **重定向** 作为POST请求的响应，响应内容是URL。浏览器收到这种相应时，会向重定向的URL发送GET请求，显示页面内容。
+由于重定向会丢失之前POST请求的`form.name.data`数据，可以将数据存储在用户会话中。这是请求上下文中的变量，名为`session`。
