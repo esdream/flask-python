@@ -128,6 +128,7 @@ Jinja2中可以使用 **过滤器** 修改变量。过滤名添加在变量名�
 |title|每个单词首字母大写|
 |trim|把首位空格去掉|
 |striptags|渲染之前把值中所有HTML标签去掉|
+|||
 
 **注：千万不要在不可信的值上使用safe过滤器，例如用户在表单中输入的文本。**
 
@@ -247,3 +248,27 @@ def index():
 ---
 在表单中，最好不要让Web程序把POST请求作为浏览器发送的最后一个请求。最好的方法是，使用 **重定向** 作为POST请求的响应，响应内容是URL。浏览器收到这种相应时，会向重定向的URL发送GET请求，显示页面内容。
 由于重定向会丢失之前POST请求的`form.name.data`数据，可以将数据存储在用户会话中。这是请求上下文中的变量，名为`session`。
+
+### Flash消息
+---
+请求完成后，有时需要让用户知道状态发生了变化，这里可以使用确认消息、警告或者错误提醒。使用`flash()`函数可以实现这种效果。
+
+仅调用`flash()`函数不能把消息显示出来，程序使用的模板要渲染这些信息。最好在 **基模板** 中渲染Flash信息。
+
+## 数据库
+---
+### Flask-SQLAlchemy
+---
+在Flask-SQLAlchemy中，数据库使用URL指定。
+
+|数据库引擎|URL|
+|---|---|
+|MySQL|mysql://username:password@hostname/database|
+|Postgres|postgresql://username:password@hostname/database|
+|SQLite(Unix)|sqlite:////absolute/path/to/database|
+|SQLite(Windows)|sqlite:///c:/absolute/path/to/database|
+|||
+
+在这些URL中，`hostname`表示MySQL服务所在的主机，可以是本地主机，也可以是远程服务器。数据库服务器上可以托管多个数据库，因此`database`表示要使用的数据库名。SQLite数据库不需要使用服务器。
+
+程序使用的数据库URL必须保存到Flask配置对象的 **SQLALCHEMY_DATABASE_URI** 键中。另外 **SQLALCHEMY_COMMIT_ON_TEARDOWN** 键设置为`True`时，每次请求结束后会自动提交数据库中的变动。
