@@ -272,3 +272,27 @@ def index():
 在这些URL中，`hostname`表示MySQL服务所在的主机，可以是本地主机，也可以是远程服务器。数据库服务器上可以托管多个数据库，因此`database`表示要使用的数据库名。SQLite数据库不需要使用服务器。
 
 程序使用的数据库URL必须保存到Flask配置对象的 **SQLALCHEMY_DATABASE_URI** 键中。另外 **SQLALCHEMY_COMMIT_ON_TEARDOWN** 键设置为`True`时，每次请求结束后会自动提交数据库中的变动。
+
+### 定义模型
+---
+模型表示程序使用的持久化实体，在ORM中，模型一般是一个Python类，类中的属性对应数据库表中的列。
+
+Flask-SQLAlchemy创建的数据库实例为模型提供了一个基类以及一系列辅助类和辅助函数，可用于定义模型的结构。定义如下：
+```python
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+
+    def __repr__(self):
+        return '<Role %r>' % self.name
+
+class User(db.Model):
+    __tablename__ == 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), unique=True, index=True)
+
+    def __repr__(self):
+        return '<User %r>' % self.username
+```
+其中`__tablename__`定义在数据库中使用的表名，如果没有定义，Flask-SQLAlchemy会使用一个默认名字。其余的类变量都是该模型的属性，被定义为`db.Column`类的实例。
