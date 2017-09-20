@@ -328,3 +328,18 @@ class User(db.Model):
 |nullable|为True时允许出现空值|
 |default|为这列定义默认值|
 |||
+
+### 关系
+---
+关系表示的示例
+```python
+class Role(db.Model):
+    # ...
+    users = db.realtionship('User', backref='role')
+
+class User(db.Model):
+    # ...
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+```
+
+添加到User模型中的role_id列被定义为 **外键** ，通过外键建立起联系。传给`db.ForeignKey()`的参数`roles.id`表明，这列的值时roles表中行的id值。
