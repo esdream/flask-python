@@ -343,3 +343,56 @@ class User(db.Model):
 ```
 
 添加到User模型中的role_id列被定义为 **外键** ，通过外键建立起联系。传给`db.ForeignKey()`的参数`roles.id`表明，这列的值时roles表中行的id值。
+
+`db.relationship()`的`backref`参数向User模型中添加一个`role`属性，从而定义反向关系。这一属性可替代`role_id`访问Role模型，此时获取的是模型对象，而不是外键的值。
+
+大多数情况下，`db.relationship()`都能自行找到关系中的外键，但有时无法决定把哪一列作为外键。如果无法确定外键，就必须为`db.relationship()`提供额外参数确定外键。
+
+常用的SQLAlchemy关系选项
+
+|选项名|说明|
+|---|---|
+|backref|在关系的另一个模型中添加反向引用|
+|primaryjoin|明确指定两个模型之间的联接条件|
+|lazy|指定如何加载相关记录，可选值有 select （首次访问时按需加载）、 immediate （源对象加载后就加载）、 joined （加载记录，但使用联结）、 subquery （立即加载，但使用子查询），noload （永不加载）和 dynamic （不加载记录，但提供加载记录的查询）|
+|uselist|如果设为False，不使用列表，而使用标量值|
+|order_by|指定记录的排序方式|
+|secondary|指定多对多关系中关系表的名字|
+|secondaryjoin|SQLAlchemy无法自行决定时，指定多对多关系中的二级联结条件|
+|||
+
+### 数据库操作
+---
+模型配置完成后就可以开始使用了，创建过程在Python Shell中进行。
+
+#### 创建表
+---
+首先让Flask-SQLAlchemy根据模型类创建数据库。
+```shell
+(venv) python view.py shell
+>>> from view import db
+>>> db.create_all()
+```
+此时在程序目录下创建了一个名为`data.sqlite`的文件。
+
+然后可以添加Role和User。
+```shell
+>>> from hello import Role, User
+>>> admin_role = Role(name='Admin')
+>>> mod_role = Role(name='Moderator')
+>>> user_role = Role(name='User')
+>>> user_john = User(username='john', role=admin_role)
+>>> user_susan = User(username='susan', role=user_role)
+>>> user_david = User(username='david', role=user_role)
+```
+
+然后将改动添加至会话（session）中。
+```shell
+>>> db.session.add_all([admin_role, mod_role, user_role,
+... user_john, user_susan, user_david])
+```
+
+再调用`commit()`提交。
+```shell
+>>> db.session.commit()
+```
